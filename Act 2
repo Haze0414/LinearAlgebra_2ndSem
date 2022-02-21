@@ -1,0 +1,884 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "name": "Untitled1.ipynb",
+      "provenance": [],
+      "collapsed_sections": [],
+      "authorship_tag": "ABX9TyOKJ8vhVWoTXxNwKFXsxHlt",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/Haze0414/LinearAlgebra_2ndSem/blob/main/Act%202\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# Linear Algebra for ChE\n",
+        "## Laboratory 4 : Matrices"
+      ],
+      "metadata": {
+        "id": "rA1h05W0xwUg"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "#Discussion\n"
+      ],
+      "metadata": {
+        "id": "Loh_WgSjyFOV"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import numpy as np\n",
+        "import matplotlib.pyplot as plt\n",
+        "import scipy.linalg as la\n",
+        "%matplotlib inline"
+      ],
+      "metadata": {
+        "id": "zHVgH-zSyHz9"
+      },
+      "execution_count": 3,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "$$\n",
+        "A = \\left\\{\n",
+        "    \\begin{array}\\\n",
+        "        x + y \\\\ \n",
+        "        4x - 10y\n",
+        "    \\end{array}\n",
+        "\\right. \\\\\n",
+        "B = \\left\\{\n",
+        "    \\begin{array}\\\n",
+        "        x+y+z \\\\ \n",
+        "        3x -2y -z \\\\\n",
+        "        -x + 4y +2z\n",
+        "    \\end{array}\n",
+        "\\right.\\\\\n",
+        "C = \\left\\{\n",
+        "    \\begin{array}\\\n",
+        "        4w+x+2y \\\\ \n",
+        "        3w +2x -y \\\\\n",
+        "        12w + (-2x) +2y\n",
+        "    \\end{array}\n",
+        "\\right. $$"
+      ],
+      "metadata": {
+        "id": "0JnVbcIqz0pc"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        ":$$\n",
+        "A=\\begin{bmatrix} 1 & 1 \\\\ 4 & {-10}\\end{bmatrix} \\\\\n",
+        "B=\\begin{bmatrix} 1 & 1 & 1 \\\\ 3 & -2 & -1 \\\\ -1 & 4 & 2\\end{bmatrix} \\\\\n",
+        "C=\\begin{bmatrix} 1 & -2 & 3 & 4 \\\\ 3 & -1 & -2 & 1 \\\\ 2 & -1 & 3 & -2\\end{bmatrix}\n",
+        "$$\n"
+      ],
+      "metadata": {
+        "id": "c9uVN8ir10ve"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "$$A=\\begin{bmatrix}\n",
+        "a_{(0,0)}&a_{(0,1)}&\\dots&a_{(0,j-1)}\\\\\n",
+        "a_{(1,0)}&a_{(1,1)}&\\dots&a_{(1,j-1)}\\\\\n",
+        "\\vdots&\\vdots&\\ddots&\\vdots&\\\\\n",
+        "a_{(i-1,0)}&a_{(i-1,1)}&\\dots&a_{(i-1,j-1)}\n",
+        "\\end{bmatrix}\n",
+        "$$\n"
+      ],
+      "metadata": {
+        "id": "yVKLA4N93vtX"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "## Since we'll keep on describing matrices. Let's make a function\n",
+        "def describe_mat(matrix):\n",
+        "    print (f'Matrix:\\n{matrix}\\n\\nShape:\\t{matrix.shape}\\nRank:\\t{matrix.ndim}\\n')"
+      ],
+      "metadata": {
+        "id": "-gEjtc_x3xD0"
+      },
+      "execution_count": 18,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "## Declaring a 2 x 2 matrix\n",
+        "A = np.array([\n",
+        "    [1, 2],\n",
+        "    [3, 1]\n",
+        "])\n",
+        "describe_mat(A)\n"
+      ],
+      "metadata": {
+        "id": "zxcYUtm14OSI"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "G = np.array([\n",
+        "              [2,3,1],\n",
+        "              [1,2,3]\n",
+        "])\n",
+        "describe_mat(G)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "MrhJ3NhZ6Q_v",
+        "outputId": "7d9d7528-547d-4244-f400-3cfc88d9f420"
+      },
+      "execution_count": 24,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Matrix:\n",
+            "[[2 3 1]\n",
+            " [1 2 3]]\n",
+            "\n",
+            "Shape:\t(2, 3)\n",
+            "Rank:\t2\n",
+            "\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "H = np.array([1, 2, 3, 4, 5])\n",
+        "describe_mat(H)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "agSuC8OM7Oww",
+        "outputId": "3e2b7b28-109c-49d9-9c6b-3532085f705d"
+      },
+      "execution_count": 25,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Matrix:\n",
+            "[1 2 3 4 5]\n",
+            "\n",
+            "Shape:\t(5,)\n",
+            "Rank:\t1\n",
+            "\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "##Categorizing Matrices\n"
+      ],
+      "metadata": {
+        "id": "KR41bPQz7Tpx"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "##Declaring a Row Matrix\n",
+        "\n",
+        "row_mat_1D= np.array([\n",
+        "                      1,2,3,4\n",
+        "                      ])\n",
+        "row_mat_2D= np.array([\n",
+        "                      [3,2,4,1]\n",
+        "])\n",
+        "describe_mat(row_mat_1D)\n",
+        "describe_mat(row_mat_2D)\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "DFS9HA1z7671",
+        "outputId": "996be368-808b-4f57-a736-d91bdf80def6"
+      },
+      "execution_count": 28,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Matrix:\n",
+            "[1 2 3 4]\n",
+            "\n",
+            "Shape:\t(4,)\n",
+            "Rank:\t1\n",
+            "\n",
+            "Matrix:\n",
+            "[[3 2 4 1]]\n",
+            "\n",
+            "Shape:\t(1, 4)\n",
+            "Rank:\t2\n",
+            "\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "## Declaring a column matrix\n",
+        "\n",
+        "col_mat = np.array([\n",
+        "                    [1],\n",
+        "                    [2],\n",
+        "                    [4]            \n",
+        "])\n",
+        "describe_mat(col_mat)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "z7mdTDJR9ezE",
+        "outputId": "98d165ee-7354-4843-c25e-f03bf0eeccb0"
+      },
+      "execution_count": 29,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Matrix:\n",
+            "[[1]\n",
+            " [2]\n",
+            " [4]]\n",
+            "\n",
+            "Shape:\t(3, 1)\n",
+            "Rank:\t2\n",
+            "\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "## Square Matrices"
+      ],
+      "metadata": {
+        "id": "Gd6dM6DK-G5C"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "def describe_mat(matrix):\n",
+        "  is_square = True if matrix.shape[0] == matrix.shape[1] else False\n",
+        "  print(f'Matrix:\\n{matrix}\\n\\nShape:\\t{matrix.shape}\\nRank:\\t{matrix.ndim}\\nIs Square: {is_square}\\n')"
+      ],
+      "metadata": {
+        "id": "WR-cyLp8-Nwa"
+      },
+      "execution_count": 32,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "square_mat = np.array([\n",
+        "               [1,2,3],\n",
+        "               [3,3,8],\n",
+        "              [4,2,3]\n",
+        "])\n",
+        "\n",
+        "non_square_mat = np.array([\n",
+        "                [2,1,3],\n",
+        "                [3,4,5]\n",
+        "])\n",
+        "describe_mat(square_mat)\n",
+        "describe_mat(non_square_mat)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "IoUZYDl8_Gch",
+        "outputId": "144e52c6-b9bf-4d14-ba9b-0b53ca9bc033"
+      },
+      "execution_count": 39,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Matrix:\n",
+            "[[1 2 3]\n",
+            " [3 3 8]\n",
+            " [4 2 3]]\n",
+            "\n",
+            "Shape:\t(3, 3)\n",
+            "Rank:\t2\n",
+            "Is Square: True\n",
+            "\n",
+            "Matrix:\n",
+            "[[2 1 3]\n",
+            " [3 4 5]]\n",
+            "\n",
+            "Shape:\t(2, 3)\n",
+            "Rank:\t2\n",
+            "Is Square: False\n",
+            "\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "## Null Matrix"
+      ],
+      "metadata": {
+        "id": "oqT0mgAJCgTH"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "def describe_mat(matrix):\n",
+        "  if matrix.size > 0:\n",
+        "    is_square = True if matrix.shape[0] == matrix.shape[1] else False\n",
+        "    print(f'Matrix :\\n{matrix}\\n\\nShape:\\t{matrix.shape}\\nRank:\\t{matrix.ndim}\\nIs Square: {is_square}\\n')\n",
+        "  else:\n",
+        "      print('Matrix is Null')\n"
+      ],
+      "metadata": {
+        "id": "roTvI3TlBOm4"
+      },
+      "execution_count": 44,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "null_mat = np.array[()]\n",
+        "describe_mat(null_mat)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 182
+        },
+        "id": "XotyP7R-CA0C",
+        "outputId": "88dd0dcc-8958-485f-e727-2442e5f82ba3"
+      },
+      "execution_count": 46,
+      "outputs": [
+        {
+          "output_type": "error",
+          "ename": "TypeError",
+          "evalue": "ignored",
+          "traceback": [
+            "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m",
+            "\u001b[0;31mTypeError\u001b[0m                                 Traceback (most recent call last)",
+            "\u001b[0;32m<ipython-input-46-0fd3aa762ddc>\u001b[0m in \u001b[0;36m<module>\u001b[0;34m()\u001b[0m\n\u001b[0;32m----> 1\u001b[0;31m \u001b[0mnull_mat\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mnp\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0marray\u001b[0m\u001b[0;34m[\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m]\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m      2\u001b[0m \u001b[0mdescribe_mat\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mnull_mat\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+            "\u001b[0;31mTypeError\u001b[0m: 'builtin_function_or_method' object is not subscriptable"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "## Zero Matrix"
+      ],
+      "metadata": {
+        "id": "5y3p9KxjCkpZ"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "zero_mat_sqr = np.zeros((1,2))\n",
+        "zero_mat_row = np.zeros((1,3))\n",
+        "zero_mat_rct = np.zeros((3,2))\n",
+        "\n",
+        "print(f'Zero Row Matrix: \\n{zero_mat_row}')\n",
+        "print(f'Zero Square Matrix: \\n{zero_mat_sqr}')\n",
+        "print(f'Zero Rectangular Matrix: \\n{zero_mat_rct}')"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "7EUc0KCDCnAD",
+        "outputId": "c3a019cf-c796-44fc-91b7-a236e3dafa67"
+      },
+      "execution_count": 47,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Zero Row Matrix: \n",
+            "[[0. 0. 0.]]\n",
+            "Zero Square Matrix: \n",
+            "[[0. 0.]]\n",
+            "Zero Rectangular Matrix: \n",
+            "[[0. 0.]\n",
+            " [0. 0.]\n",
+            " [0. 0.]]\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "## Ones Matrix\n"
+      ],
+      "metadata": {
+        "id": "JDU96LCLDKVn"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "ones_mat_row = np.ones((1,2))\n",
+        "ones_mat_sqr = np.ones((3,2))\n",
+        "ones_mat_rec = np.ones((2,2))\n",
+        "\n",
+        "print(f'Ones Row Matrix: \\n{ones_mat_row}')\n",
+        "print(f'Ones Square Matrix: \\n{ones_mat_sqr}')\n",
+        "print(f'Ones Rectangular Matrix: \\n{ones_mat_rec}')"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "LSHnR-J9DMGe",
+        "outputId": "677a0f5c-ea1f-49da-9db5-cac0508745dc"
+      },
+      "execution_count": 48,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Ones Row Matrix: \n",
+            "[[1. 1.]]\n",
+            "Ones Square Matrix: \n",
+            "[[1. 1.]\n",
+            " [1. 1.]\n",
+            " [1. 1.]]\n",
+            "Ones Rectangular Matrix: \n",
+            "[[1. 1.]\n",
+            " [1. 1.]]\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "##Diagonal Matrix"
+      ],
+      "metadata": {
+        "id": "15pbuxEAEqal"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "np.array([\n",
+        "          [2,0,0],\n",
+        "          [0,3,0],\n",
+        "          [0,0,5],\n",
+        "])\n",
+        "# a[1,1], a[2,2], a[3,3], ... a[n-1,n-1]"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "GkNvNFZ7Er6f",
+        "outputId": "a16fab68-1128-4c49-bf6c-5448d35e1a19"
+      },
+      "execution_count": 49,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "array([[2, 0, 0],\n",
+              "       [0, 3, 0],\n",
+              "       [0, 0, 5]])"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 49
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "d = np.diag([2,3,5,7])\n",
+        "d.shape[0] == d.shape[1]\n",
+        "d"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "9g89vQ8qFGkk",
+        "outputId": "fb224464-9471-48c2-bd21-b8f00196c48b"
+      },
+      "execution_count": 50,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "array([[2, 0, 0, 0],\n",
+              "       [0, 3, 0, 0],\n",
+              "       [0, 0, 5, 0],\n",
+              "       [0, 0, 0, 7]])"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 50
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "## Identity Matrix"
+      ],
+      "metadata": {
+        "id": "Wh2f4vxuF6oV"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "np.eye(3)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "cp8kPufYF8aD",
+        "outputId": "b117363e-8dc2-4850-b635-f8fe7b741bef"
+      },
+      "execution_count": 51,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "array([[1., 0., 0.],\n",
+              "       [0., 1., 0.],\n",
+              "       [0., 0., 1.]])"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 51
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "np.identity(5)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "n4KPIgzjF_2Q",
+        "outputId": "e0089afe-14de-4a39-bd2c-20881a0cded1"
+      },
+      "execution_count": 52,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "array([[1., 0., 0., 0., 0.],\n",
+              "       [0., 1., 0., 0., 0.],\n",
+              "       [0., 0., 1., 0., 0.],\n",
+              "       [0., 0., 0., 1., 0.],\n",
+              "       [0., 0., 0., 0., 1.]])"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 52
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "## Upper Triangular Matrix"
+      ],
+      "metadata": {
+        "id": "VYhoYDh1GEtU"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "np.array([\n",
+        "          [3,2,4,1],\n",
+        "          [0,2,4,1],\n",
+        "          [0,0,3,1],\n",
+        "          [0,0,0,1]\n",
+        "])"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "-sMnDQOEGHJn",
+        "outputId": "d66da5d3-f78e-4ccf-b06d-1bad47b4a251"
+      },
+      "execution_count": 55,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "array([[3, 2, 4, 1],\n",
+              "       [0, 2, 4, 1],\n",
+              "       [0, 0, 3, 1],\n",
+              "       [0, 0, 0, 1]])"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 55
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "##Lower Triangular Matrix"
+      ],
+      "metadata": {
+        "id": "6X8HIHbwGxWC"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "## Practice\n"
+      ],
+      "metadata": {
+        "id": "B8XCHZ6HH1oK"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "1. Given the linear combination below, try to create a corresponding matrix representing it.\n"
+      ],
+      "metadata": {
+        "id": "s2VfrtGnImhk"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "$$\n",
+        "A = \\left\\{\\begin{array}\n",
+        "5x_1 + 2x_2 +x_3\\\\\n",
+        "4x_2 - x_3\\\\\n",
+        "10x_3\n",
+        "\\end{array}\\right.\n",
+        "$$\n"
+      ],
+      "metadata": {
+        "id": "ECUNo2MZH943"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "2. Given the system of linear combinations below, try to encode it as a matrix. Also describe the matrix.\n"
+      ],
+      "metadata": {
+        "id": "XTooaoWIIx4H"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        ":$$\\theta = 5x + 3y - z$$\n"
+      ],
+      "metadata": {
+        "id": "O4SE_4L7I1wB"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "3. Given the matrix below, express it as a linear combination in a markdown and a LaTeX markdown\n"
+      ],
+      "metadata": {
+        "id": "vEBec9MEI5QJ"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "G = np.array ([\n",
+        "               [1,2,3,4],\n",
+        "               [1,2,3,4],\n",
+        "               [1,2,3,4],\n",
+        "               [1,2,3,4]\n",
+        "])"
+      ],
+      "metadata": {
+        "id": "JdF4pou6IWkR"
+      },
+      "execution_count": 57,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "4. Given the matrix below, display the output as a LaTeX markdown also express it as a system of linear combinations.\n"
+      ],
+      "metadata": {
+        "id": "XYZewhXiI9fx"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "H = np.tril(G)\n",
+        "H\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "L9Kuz9LLI-5y",
+        "outputId": "e9eb5d2b-0ba2-4dcd-a593-3ee060134f06"
+      },
+      "execution_count": 58,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "array([[1, 0, 0, 0],\n",
+              "       [1, 2, 0, 0],\n",
+              "       [1, 2, 3, 0],\n",
+              "       [1, 2, 3, 4]])"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 58
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "##Addition"
+      ],
+      "metadata": {
+        "id": "OUc3aHxDJWv8"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "A = np.array ([\n",
+        "               [1,2],\n",
+        "               [1,2],\n",
+        "               [1,2]\n",
+        "])\n",
+        "B = np.array ([\n",
+        "               [2,3],\n",
+        "               [2,3],\n",
+        "               [2,3]\n",
+        "               ])\n",
+        "A+B"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "AvSJbmpAJX-2",
+        "outputId": "1d3a7e4e-ca85-4adf-d566-7888369542e5"
+      },
+      "execution_count": 60,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "array([[3, 5],\n",
+              "       [3, 5],\n",
+              "       [3, 5]])"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 60
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "4+A ##Broadcasting"
+      ],
+      "metadata": {
+        "id": "-niGutQ5J0Eh"
+      },
+      "execution_count": null,
+      "outputs": []
+    }
+  ]
+}
